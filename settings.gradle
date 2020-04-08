@@ -1,0 +1,2 @@
+rootProject.name='GranjonToDoList'
+include ':app'
