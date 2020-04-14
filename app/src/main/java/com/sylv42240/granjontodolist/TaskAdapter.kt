@@ -9,6 +9,7 @@ class TaskAdapter : RecyclerView.Adapter<TaskViewHolder>() {
     private val taskList: MutableList<Task> = mutableListOf()
     lateinit var onTaskClickListener: (Task, Int) -> Unit
     lateinit var onLongTaskClickListener: (Task, Int) -> Unit
+    private var sortMode = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val v =
@@ -29,7 +30,13 @@ class TaskAdapter : RecyclerView.Adapter<TaskViewHolder>() {
     fun setTaskList(songList: List<Task>) {
         this.taskList.clear()
         this.taskList.addAll(songList)
-        notifyDataSetChanged()
+        when (sortMode) {
+            0 -> notifyDataSetChanged()
+            1 -> sortListByName()
+            2 -> sortListByChecked()
+            3 -> sortListByCreation()
+            4 -> sortListByUpdate()
+        }
     }
 
     fun addItem(task: Task) {
@@ -46,6 +53,29 @@ class TaskAdapter : RecyclerView.Adapter<TaskViewHolder>() {
         return this.taskList[position]
     }
 
+    fun sortListByName() {
+        this.taskList.sortBy { it.name.toUpperCase() }
+        notifyDataSetChanged()
+        sortMode = 1
+    }
+
+    fun sortListByChecked() {
+        this.taskList.sortBy { !it.isChecked }
+        notifyDataSetChanged()
+        sortMode = 2
+    }
+
+    fun sortListByCreation() {
+        this.taskList.sortByDescending { it.createdAt }
+        notifyDataSetChanged()
+        sortMode = 3
+    }
+
+    fun sortListByUpdate() {
+        this.taskList.sortByDescending { it.updatedAt }
+        notifyDataSetChanged()
+        sortMode = 4
+    }
 
 }
 

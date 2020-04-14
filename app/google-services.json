@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "490973181539",
+    "firebase_url": "https://granjontodolist.firebaseio.com",
+    "project_id": "granjontodolist",
+    "storage_bucket": "granjontodolist.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490973181539:android:5f70ea78466a2f6c4faa56",
+        "android_client_info": {
+          "package_name": "com.sylv42240.granjontodolist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "490973181539-h50h132fil2s62cuj1qnekudr2v968i0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkyYDQ6--7Z3Vc4xcb6HlqJcMsFiYCqzQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "490973181539-h50h132fil2s62cuj1qnekudr2v968i0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Granjon ToDo List</string>
-    <string name="add">Ajouter</string>
-    <string name="add_title">Ajouter une tache</string>
-    <string name="not_found">Aucune tache trouvée.\nPour en ajouter une, appuyer sur le bouton en bas à droite de l\'écran.</string>
+    <string name="add">Add</string>
+    <string name="add_title">Add a task</string>
+    <string name="modify_title">Update a task</string>
+    <string name="modify">Update</string>
+    <string name="sort">Sort tasks by :</string>
 </resources>
