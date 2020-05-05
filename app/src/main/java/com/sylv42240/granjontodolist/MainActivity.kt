@@ -17,10 +17,7 @@ import com.afollestad.materialdialogs.bottomsheets.BasicGridItem
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.bottomsheets.gridItems
 import com.afollestad.materialdialogs.input.input
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -28,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: TaskAdapter
     private val database = FirebaseDatabase.getInstance()
-    private val taskReference = database.getReference("Tasks")
+    private lateinit var taskReference: DatabaseReference
     private var currentSearch = ""
     private val currentList = mutableListOf<Task>()
     private val completeList = mutableListOf<Task>()
@@ -37,6 +34,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        database.setPersistenceEnabled(true)
+        taskReference = database.getReference("Tasks")
+        taskReference.keepSynced(true)
         initRecyclerView()
         retrieveData()
         setupActionButton()
@@ -205,9 +205,7 @@ class MainActivity : AppCompatActivity() {
                     val createdAt = task["createdAt"] as Long
                     val updatedAt = task["updatedAt"] as Long
                     id?.let { it1 -> Task(it1, name, isChecked, createdAt, updatedAt) }
-                        ?.let { it2 ->
-                            adapter.addItem(it2)
-                        }
+                        ?.let { it2 -> adapter.addItem(it2) }
                 }
                 positiveButton(R.string.add)
                 title(R.string.add_title)
