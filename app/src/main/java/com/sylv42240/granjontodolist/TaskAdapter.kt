@@ -27,9 +27,13 @@ class TaskAdapter : RecyclerView.Adapter<TaskViewHolder>() {
         holder.bindData(taskDetail, position, onTaskClickListener, onLongTaskClickListener)
     }
 
-    fun setTaskList(songList: List<Task>) {
+    fun setTaskList(songList: List<Task>, currentSearch: String) {
         this.taskList.clear()
-        this.taskList.addAll(songList)
+        if (currentSearch.isNotBlank()){
+            this.taskList.addAll(songList.filter { it.name.toUpperCase().contains(currentSearch.toUpperCase()) })
+        }else{
+            this.taskList.addAll(songList)
+        }
         when (sortMode) {
             0 -> notifyDataSetChanged()
             1 -> sortListByName()

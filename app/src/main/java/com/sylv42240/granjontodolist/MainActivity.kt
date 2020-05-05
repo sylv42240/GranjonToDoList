@@ -1,10 +1,13 @@
 package com.sylv42240.granjontodolist
 
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +29,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: TaskAdapter
     private val database = FirebaseDatabase.getInstance()
     private val taskReference = database.getReference("Tasks")
+    private var currentSearch = ""
+    private val currentList = mutableListOf<Task>()
+    private val completeList = mutableListOf<Task>()
+    private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +42,41 @@ class MainActivity : AppCompatActivity() {
         setupActionButton()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_toolbar, menu);
-        return true;
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_toolbar, menu)
+        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchItem = menu.findItem(R.id.search_item)
+        val searchView = searchItem.actionView as SearchView
+        this.searchView = searchView
+
+        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    currentSearch = query
+                    searchView.clearFocus()
+                    setupRecyclerView(currentList)
+                    return true
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return if (newText != null) {
+                    currentSearch = newText
+                    true
+                } else {
+                    false
+                }
+            }
+
+        })
+        searchView.setOnCloseListener {
+            currentSearch = ""
+            setupRecyclerView(completeList)
+            return@setOnCloseListener false
+        }
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -109,6 +148,8 @@ class MainActivity : AppCompatActivity() {
                     taskList.add(Task(id, name, isChecked, createdAt, updatedAt))
                 }
                 setupRecyclerView(taskList)
+                completeList.clear()
+                completeList.addAll(taskList)
             }
 
         })
@@ -142,7 +183,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView(taskList: MutableList<Task>) {
-        adapter.setTaskList(taskList)
+        adapter.setTaskList(taskList, currentSearch)
+        currentList.clear()
+        currentList.addAll(taskList)
     }
 
     private fun setupActionButton() {
